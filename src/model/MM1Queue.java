@@ -1,8 +1,6 @@
 package model;
 
-import java.util.List;
-import java.util.Queue;
-import java.util.Random;
+import java.util.*;
 
 public class MM1Queue {
 
@@ -17,6 +15,9 @@ public class MM1Queue {
         this.lambda = lambda;
         this.mu = mu;
         this.generator = new Random();
+        this.eventQueue = new PriorityQueue<>();
+        this.arrivalTimesList = new ArrayList<>();
+        this.departureTimesList = new ArrayList<>();
     }
 
     public double getLambda() {
@@ -62,4 +63,6 @@ public class MM1Queue {
     public Random getGenerator() {
         return generator;
     }
+
+
 }

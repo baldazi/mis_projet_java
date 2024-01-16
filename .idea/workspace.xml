@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="2823b7ae-6a41-4133-b501-b1db7d70b223" name="Changes" comment="initialisation du projet">
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/model/Event.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/model/EventType.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/model/MM1Queue.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/system/Coordinator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/system/DDB.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/system/Server.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/MM1Queue.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/MM1Queue.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/system/Coordinator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/system/Coordinator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/system/DDB.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/system/DDB.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/system/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/system/Server.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,6 +48,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "master",
     "last_opened_file_path": "C:/Users/Aziz Balde/IdeaProjects/ProgetMis/src",
     "settings.editor.selected.configurable": "preferences.pluginManager"
   }

@@ -14,11 +14,11 @@ public class Server {
       this.queue = new MM1Queue(this.lambda, this.mu);
    }
 
-   private  double getNextArrivalTime() {
+   public double getNextArrivalTime() {
       return - (1 / this.lambda) * Math.log(1 - this.queue.getGenerator().nextDouble());
    }
 
-   private double getNextDepartureTime() {
+   public double getNextDepartureTime() {
       return - (1 / this.mu) * Math.log(1 - this.queue.getGenerator().nextDouble());
    }
 }
