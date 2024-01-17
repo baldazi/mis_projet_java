@@ -1,6 +1,8 @@
 package core;
 
-public class Utils {
+import java.util.Random;
 
+public class Utils {
+    private static final Random generator = new Random();
 }
 
