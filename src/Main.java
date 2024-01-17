@@ -1,13 +1,20 @@
 import system.DDB;
 
-import java.util.List;
-
 public class Main {
-    private static final double D = 10_000;
     public static void main(String[] args) {
-        List<Double> mus = List.of(1 / 100d, 1 / 100d, 1 / 200d, 1 / 200d);
-        List<Double> ps = List.of(1 / 4d, 1 / 4d, 1 / 4d, 1 / 4d);
-        DDB system = new DDB(4, 1/100d, mus, ps);
-        system.simulate(D);
+        // Paramètres de simulation
+        int nbServers = 3;
+        double mu = 0.0095;
+        double tempsServiceCoord = 0.01;
+        double[] tempsServiceServeurs = {0.1, 0.1, 0.2};
+        double[] probabilitesRoutage = {1.0 / 3, 1.0 / 3, 1.0 / 3};
+        double tempsSimulation = 1000;
+
+        // Création du système de gestion de requêtes
+        DDB systeme = new DDB(nbServers, mu,
+                tempsServiceCoord, tempsServiceServeurs, probabilitesRoutage, tempsSimulation);
+
+        // Exécution de la simulation
+        systeme.simuler();
     }
 }
