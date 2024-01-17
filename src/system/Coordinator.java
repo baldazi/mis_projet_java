@@ -7,8 +7,8 @@ public class Coordinator {
     private double q;
     private MM1Queue queue;
     private double mu;
-
     private double n;
+
     public Coordinator(double lambda, int n) {
         this.lambda = lambda;
         this.mu = 0;

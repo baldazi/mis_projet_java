@@ -6,18 +6,12 @@ public class MM1Queue {
 
     private double lambda;
     private double mu;
-    private Queue<Event> eventQueue;
-    private List<Double> arrivalTimesList;
-    private List<Double> departureTimesList;
-    private Random generator;
+    private Queue<Request> requestQueue;
 
     public MM1Queue(double lambda, double mu) {
         this.lambda = lambda;
         this.mu = mu;
-        this.generator = new Random();
-        this.eventQueue = new PriorityQueue<>();
-        this.arrivalTimesList = new ArrayList<>();
-        this.departureTimesList = new ArrayList<>();
+        this.requestQueue = new PriorityQueue<>();
     }
 
     public double getLambda() {
@@ -36,33 +30,11 @@ public class MM1Queue {
         this.mu = mu;
     }
 
-    public Queue<Event> getEventQueue() {
-        return eventQueue;
+    public Queue<Request> getRequestQueue() {
+        return requestQueue;
     }
 
-    public void setEventQueue(Queue<Event> eventQueue) {
-        this.eventQueue = eventQueue;
+    public void addRequest(Request request) {
+        this.requestQueue.add(request);
     }
-
-    public List<Double> getArrivalTimesList() {
-        return arrivalTimesList;
-    }
-
-    public void setArrivalTimesList(List<Double> arrivalTimesList) {
-        this.arrivalTimesList = arrivalTimesList;
-    }
-
-    public List<Double> getDepartureTimesList() {
-        return departureTimesList;
-    }
-
-    public void setDepartureTimesList(List<Double> departureTimesList) {
-        this.departureTimesList = departureTimesList;
-    }
-
-    public Random getGenerator() {
-        return generator;
-    }
-
-
 }

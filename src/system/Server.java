@@ -2,6 +2,8 @@ package system;
 
 import model.MM1Queue;
 
+import static core.Utils.generator;
+
 public class Server {
    private double p;
    private double lambda;
@@ -15,10 +17,10 @@ public class Server {
    }
 
    public double getNextArrivalTime() {
-      return - (1 / this.lambda) * Math.log(1 - this.queue.getGenerator().nextDouble());
+      return - (1 / this.lambda) * Math.log(1 - generator.nextDouble());
    }
 
    public double getNextDepartureTime() {
-      return - (1 / this.mu) * Math.log(1 - this.queue.getGenerator().nextDouble());
+      return - (1 / this.mu) * Math.log(1 - generator.nextDouble());
    }
 }
