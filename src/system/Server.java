@@ -9,20 +9,18 @@ import java.util.Queue;
 public class Server {
 
     private Queue<Request> queue;
-    private double lambda;
     private double mu;
     private double p;  // Probabilité de routage vers le coordinateur
 
-    public Server(double lambda, double mu, double p) {
+    public Server(double mu, double p) {
         this.queue = new LinkedList<>();
-        this.lambda = lambda;
         this.mu = mu;
         this.p = p;
     }
 
     // ... (autres méthodes)
 
-    public void traiterRequete(double simulationTime) {
+    public void requestProcess(double simulationTime) {
         if (!queue.isEmpty()) {
             Request request = queue.poll();
             double endTimeService = simulationTime + mu;
@@ -47,6 +45,6 @@ public class Server {
     }
 
     public double getNextEventTime() {
-        return this.queue.poll().getTime();
+        return isEmpty() ? Double.MAX_VALUE : queue.peek().getTime();
     }
 }

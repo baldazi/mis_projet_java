@@ -31,4 +31,12 @@ public class Request implements Comparable<Request> {
     public void setEndTimeService(double endTimeService) {
         this.endTimeService = endTimeService;
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public double getEndTimeService() {
+        return endTimeService;
+    }
 }
