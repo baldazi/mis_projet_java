@@ -6,7 +6,7 @@ public class MM1Queue {
 
     private double lambda;
     private double mu;
-    private Queue<Request> requestQueue;
+    private final Queue<Request> requestQueue;
 
     public MM1Queue(double lambda, double mu) {
         this.lambda = lambda;
@@ -36,5 +36,8 @@ public class MM1Queue {
 
     public void addRequest(Request request) {
         this.requestQueue.add(request);
+    }
+    public void removeRequest(Request request) {
+        this.requestQueue.remove(request);
     }
 }

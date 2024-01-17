@@ -4,14 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2823b7ae-6a41-4133-b501-b1db7d70b223" name="Changes" comment="initialisation du projet">
-      <change afterPath="$PROJECT_DIR$/src/core/Utils.java" afterDir="false" />
+    <list default="true" id="2823b7ae-6a41-4133-b501-b1db7d70b223" name="Changes" comment="definition des requetes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/Event.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Request.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/EventType.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/model/MM1Queue.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/MM1Queue.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/system/Coordinator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/system/Coordinator.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/system/DDB.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/system/DDB.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/system/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/system/Server.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,6 +65,20 @@
       <recent name="" />
     </key>
   </component>
+  <component name="RunManager">
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="ProgetMis" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.Main" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -83,7 +95,14 @@
       <option name="project" value="LOCAL" />
       <updated>1705326730295</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="definition des requetes">
+      <created>1705497165519</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1705497165519</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -99,6 +118,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="initialisation du projet" />
-    <option name="LAST_COMMIT_MESSAGE" value="initialisation du projet" />
+    <MESSAGE value="definition des requetes" />
+    <option name="LAST_COMMIT_MESSAGE" value="definition des requetes" />
   </component>
 </project>

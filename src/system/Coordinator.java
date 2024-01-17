@@ -14,7 +14,7 @@ public class Coordinator {
         this.mu = 0;
         this.queue = new MM1Queue(this.lambda, this.mu);
         this.n = n;
-        this.q = 1/n;
+        this.q = 1d/n;
     }
 
     public double getLambda() {
