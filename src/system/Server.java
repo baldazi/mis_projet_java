@@ -27,11 +27,13 @@ public class Server {
             // Utilisez la probabilité de routage pour rediriger la requête
             if (Utils.generator.nextDouble() <= this.p) {
                 // La requête va vers le coordinateur
-                queue.add(new Request(RequestType.END_PROCESSING, endTimeService));
+                Request rq = new Request(RequestType.END_PROCESSING, endTimeService);
+                queue.add(rq);
+                System.out.println("La requête " + request.getId() + " retourne dans le coordinateur à l'instant " + simulationTime);
             } else {
                 // La requete sort du système
                 //todo
-                System.out.println("La requête " + request.getId() + " a quitté le système à la simulationTime = " + simulationTime);
+                System.out.println("La requête " + request.getId() + " a quitté le système à l'instant " + simulationTime);
             }
         }
     }

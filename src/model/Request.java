@@ -7,11 +7,12 @@ public class Request implements Comparable<Request> {
     private RequestType type;
     private double time;
     private double endTimeService;  // Nouvelle propriété pour stocker la fin du service
-
+    private double endTimeSystem;
     public Request(RequestType type, double time) {
         this.type = type;
         this.time = time;
         this.endTimeService = 0;
+        this.endTimeSystem = -1;
         this.id = counter++;
     }
 
@@ -38,5 +39,13 @@ public class Request implements Comparable<Request> {
 
     public double getEndTimeService() {
         return endTimeService;
+    }
+
+    public double getEndTimeSystem() {
+        return endTimeSystem;
+    }
+
+    public void setEndTimeSystem(double endTimeSystem) {
+        this.endTimeSystem = endTimeSystem;
     }
 }
