@@ -25,7 +25,7 @@ public class Coordinator {
     public double getNextEventTime(List<Server> servers) {
         double nextArrivalTime = Double.MAX_VALUE;
         if (!queue.isEmpty()) {
-            nextArrivalTime = queue.peek().getTime();
+            nextArrivalTime = queue.poll().getTime();
         }
 
         double nextProcessingTime = Double.MAX_VALUE;

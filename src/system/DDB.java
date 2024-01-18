@@ -66,15 +66,13 @@ public class DDB {
                 for (Server server : servers) {
                     if (!server.isEmpty() && server.getNextEventTime() == nextEventTime) {
                         server.requestProcess(nextEventTime);
+                    }else {
+                        generateArrivalRequest();
                     }
                 }
             }
 
-            if (coordEventTime == nextEventTime) {
-                this.simulationTime += 1; // Ajoutez un petit pas de temps arbitraire
-            } else {
-                this.simulationTime = Math.min(coordEventTime, nextEventTime);
-            }
+            this.simulationTime = Math.min(coordEventTime, nextEventTime);
         }
     }
 }
