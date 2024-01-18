@@ -47,4 +47,8 @@ public class Coordinator {
         // Choix aléatoire d'un serveur parmi les nb serveurs disponibles
         return Utils.generator.nextInt(nb);
     }
+
+    public Queue<Request> getQueue() {
+        return queue;
+    }
 }

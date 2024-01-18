@@ -49,4 +49,7 @@ public class Server {
     public double getNextEventTime() {
         return isEmpty() ? Double.MAX_VALUE : queue.peek().getTime();
     }
+    public Queue<Request> getQueue() {
+        return queue;
+    }
 }

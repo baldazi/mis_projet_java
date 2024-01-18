@@ -27,7 +27,7 @@ public class DDB {
     }
 
     private void generateArrivalRequest() {
-        double arrivalTime = Utils.expo(this.lambda)+this.simulationTime;
+        double arrivalTime = Utils.poisson(this.lambda)+this.simulationTime;
         Request request = new Request(RequestType.ARRIVAL, arrivalTime);
         coordinator.addRequest(request);
         System.out.println("Arrivée d'une requête au coordinateur à l'instant " + arrivalTime);
@@ -75,8 +75,17 @@ public class DDB {
                 }
             }
 
+            System.out.println("nombre de requetes : " + this.nbRequest());
+
             this.simulationTime = Math.min(coordEventTime, nextEventTime);
         }
+    }
+
+    public int nbRequest(){
+        int nb = this.coordinator.getQueue().size();
+        for(Server s: this.servers)
+            nb += s.getQueue().size();
+        return nb;
     }
 
 }
