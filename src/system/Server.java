@@ -1,5 +1,6 @@
 package system;
 
+import core.Utils;
 import model.Request;
 import model.RequestType;
 
@@ -18,20 +19,19 @@ public class Server {
         this.p = p;
     }
 
-    // ... (autres méthodes)
-
     public void requestProcess(double simulationTime) {
         if (!queue.isEmpty()) {
             Request request = queue.poll();
             double endTimeService = simulationTime + mu;
             request.setEndTimeService(endTimeService);
             // Utilisez la probabilité de routage pour rediriger la requête
-            if (Math.random() <= this.p) {
+            if (Utils.generator.nextDouble() <= this.p) {
                 // La requête va vers le coordinateur
                 queue.add(new Request(RequestType.END_PROCESSING, endTimeService));
             } else {
-                // La requête reste dans le serveur
-                // ...
+                // La requete sort du système
+                //todo
+                System.out.println("La requête " + request.getId() + " a quitté le système à la simulationTime = " + simulationTime);
             }
         }
     }

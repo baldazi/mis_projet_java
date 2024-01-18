@@ -6,10 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="2823b7ae-6a41-4133-b501-b1db7d70b223" name="Changes" comment="update">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/core/Utils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/core/Utils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/Request.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Request.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/RequestType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/RequestType.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/system/Coordinator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/system/Coordinator.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/system/DDB.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/system/DDB.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/system/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/system/Server.java" afterDir="false" />
@@ -44,16 +40,15 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Aziz Balde/IdeaProjects/ProgetMis/src&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "master",
+    "last_opened_file_path": "C:/Users/Aziz Balde/IdeaProjects/ProgetMis/src",
+    "settings.editor.selected.configurable": "preferences.pluginManager"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\Aziz Balde\IdeaProjects\ProgetMis\src" />
@@ -135,7 +130,14 @@
       <option name="project" value="LOCAL" />
       <updated>1705519668244</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="update">
+      <created>1705532724906</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1705532724906</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

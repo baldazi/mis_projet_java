@@ -12,7 +12,7 @@ public class DDB {
     private final Coordinator coordinator;
     private final List<Server> servers;
     private final double lambda;
-    private final double simulationTime;
+    private double simulationTime;
 
     public DDB(int nb, double lambda, double mu, double[] mus, double[] ps) {
         this.lambda = lambda;
@@ -23,16 +23,11 @@ public class DDB {
             servers.add(new Server(mus[i], ps[i]));
         }
 
-        double[] qs = new double[nb];
-        for (int i = 0; i < nb; i++) {
-            qs[i] = 1.0 / i;
-        }
-
-        this.coordinator = new Coordinator(mu, qs);
+        this.coordinator = new Coordinator(mu, nb);
     }
 
     private void generateArrivalRequest() {
-        double arrivalTime = Utils.poisson(this.lambda);
+        double arrivalTime = Utils.expo(this.lambda);
         Request request = new Request(RequestType.ARRIVAL, arrivalTime);
         coordinator.addRequest(request);
         System.out.println("Arrivée d'une requête au coordinateur à la simulationTime = " + arrivalTime);
@@ -73,6 +68,12 @@ public class DDB {
                         server.requestProcess(nextEventTime);
                     }
                 }
+            }
+
+            if (coordEventTime == nextEventTime) {
+                this.simulationTime += 1; // Ajoutez un petit pas de temps arbitraire
+            } else {
+                this.simulationTime = Math.min(coordEventTime, nextEventTime);
             }
         }
     }

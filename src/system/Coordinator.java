@@ -6,15 +6,16 @@ import model.Request;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+
 public class Coordinator {
     private final Queue<Request> queue;
     private final double mu;
-    private final double[] q;  // Vecteur q
+    private final int nb;
 
-    public Coordinator(double mu, double[] q) {
+    public Coordinator(double mu, int nb) {
         this.queue = new LinkedList<>();
         this.mu = mu;
-        this.q = q;
+        this.nb = nb;
     }
 
     public void addRequest(Request request) {
@@ -28,9 +29,9 @@ public class Coordinator {
         }
 
         double nextProcessingTime = Double.MAX_VALUE;
-        for (int i = 0; i < q.length; i++) {
-            if (!servers.get(i).isEmpty()) {
-                double processingTime = servers.get(i).getNextEventTime();
+        for (Server server : servers) {
+            if (!server.isEmpty()) {
+                double processingTime = server.getNextEventTime();
                 nextProcessingTime = Math.min(nextProcessingTime, processingTime);
             }
         }
@@ -38,21 +39,12 @@ public class Coordinator {
         return Math.min(nextArrivalTime, nextProcessingTime);
     }
 
-    public int chooseServer() {
-        // Implémentez le choix du serveur de destination en fonction des probabilités
-        double randomValue = Utils.generator.nextDouble();
-        double cumulativeProbability = 0.0;
-        for (int i = 0; i < this.q.length; i++) {
-            cumulativeProbability += q[i];
-            if (randomValue <= cumulativeProbability) {
-                return i;
-            }
-        }
-        // Par défaut, retourne le dernier serveur
-        return this.q.length - 1;
-    }
-
     public double getMu() {
         return mu;
+    }
+
+    public int chooseServer() {
+        // Choix aléatoire d'un serveur parmi les nb serveurs disponibles
+        return Utils.generator.nextInt(nb);
     }
 }
