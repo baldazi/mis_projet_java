@@ -1,8 +1,8 @@
 package system;
 
 import core.Utils;
-import model.Request;
-import model.RequestType;
+import model.Event;
+import model.EventType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,19 +28,20 @@ public class DDB {
 
     private void generateArrivalRequest() {
         double arrivalTime = Utils.poisson(this.lambda)+this.simulationTime;
-        Request request = new Request(RequestType.ARRIVAL, arrivalTime);
-        coordinator.addRequest(request);
+        Event event = new Event(EventType.ARRIVAL, arrivalTime);
+        coordinator.addRequest(event);
         System.out.println("Arrivée d'une requête au coordinateur à l'instant " + arrivalTime);
     }
 
     public void requestProcess(double t) {
         // Implémente le traitement de la requête par le coordinateur
-        double endTime = t + this.coordinator.getMu();
+        double endTime = t + Utils.expo(this.coordinator.getMu());
         // Utilisez le vecteur de routage pour rediriger la requête
         int serveurDestination = coordinator.chooseServer();
-        Request request = new Request(RequestType.PROCESSING, endTime);
-        servers.get(serveurDestination).addRequest(request);
-        System.out.println("Traitement de la requête " + request.getId() +
+        Event event = new Event(EventType.PROCESSING, endTime);
+        servers.get(serveurDestination).addRequest(event);
+        System.out.println("Traitement de la requête " + event.getId() +
+
                 " au coordinateur. Redirigée vers le serveur " + serveurDestination +
                 " à l'instant = " + endTime);
     }
@@ -49,23 +50,23 @@ public class DDB {
         generateArrivalRequest();
 
         while (this.simulationTime < T) {
-            // Trouver le prochain événement
+            // Trouve la prochaine arrivée
             double nextEventTime = Double.MAX_VALUE;
             for (Server server : servers) {
-                if (!server.isEmpty() && server.getNextEventTime() < nextEventTime) {
-                    nextEventTime = server.getNextEventTime();
+                if (!server.isEmpty() && server.getNextArrivalTime() < nextEventTime) {
+                    nextEventTime = server.getNextArrivalTime();
                 }
             }
 
-            // Événement dans le coordinateur
+            // Date du prochain événement dans le coordinateur
             double coordEventTime = coordinator.getNextEventTime(servers);
             if (coordEventTime < nextEventTime) {
                 this.requestProcess(coordEventTime);
             } else {
                 // Événement dans un serveur
                 for (Server server : servers) {
-                    if (!server.isEmpty() && server.getNextEventTime() == nextEventTime) {
-                        server.requestProcess(nextEventTime);
+                    if (!server.isEmpty() && server.getNextArrivalTime() == nextEventTime) {
+                        server.handleNextEvent(nextEventTime);
                     }
                 }
 

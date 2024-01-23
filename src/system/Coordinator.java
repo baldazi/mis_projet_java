@@ -1,46 +1,46 @@
 package system;
 
 import core.Utils;
-import model.Request;
+import model.Event;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 public class Coordinator {
-    private final Queue<Request> queue;
-    private final double mu;
-    private final int nb;
+    private final List<Event> queue;
+    public final double mu;
+    public final int nb;
 
     public Coordinator(double mu, int nb) {
-        this.queue = new LinkedList<>();
+        this.queue = new ArrayList<>();
         this.mu = mu;
         this.nb = nb;
     }
 
-    public void addRequest(Request request) {
-        this.queue.add(request);
+    public void addRequest(Event event) {
+        int i = Collections.binarySearch(this.queue, event);
+
+        this.queue.add(-i - 1, event);
     }
 
-    public double getNextEventTime(List<Server> servers) {
-        double nextArrivalTime = Double.MAX_VALUE;
-        if (!queue.isEmpty()) {
-            nextArrivalTime = queue.poll().getTime();
+    /**
+     * Renvoie l'heure du prochain évènement
+     */
+    public Event getNextEvent(List<Server> servers) {
+        Event e = null;
+
+        if(!this.queue.isEmpty()) {
+            e = this.queue.get(0);
         }
 
-        double nextProcessingTime = Double.MAX_VALUE;
-        for (Server server : servers) {
-            if (!server.isEmpty()) {
-                double processingTime = server.getNextEventTime();
-                nextProcessingTime = Math.min(nextProcessingTime, processingTime);
+        for(Server s : servers) {
+            Event f = s.peekNextEvent();
+
+            if(e == null || (f != null && f.getTime() < e.getTime())) {
+                e = f;
             }
         }
 
-        return Math.min(nextArrivalTime, nextProcessingTime);
-    }
-
-    public double getMu() {
-        return mu;
+        return e;
     }
 
     public int chooseServer() {
@@ -48,7 +48,7 @@ public class Coordinator {
         return Utils.generator.nextInt(nb);
     }
 
-    public Queue<Request> getQueue() {
-        return queue;
+    public List<Event> getQueue() {
+        return Collections.unmodifiableList(queue);
     }
 }

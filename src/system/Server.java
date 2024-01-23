@@ -1,55 +1,78 @@
 package system;
 
 import core.Utils;
-import model.Request;
-import model.RequestType;
+import model.Event;
+import model.EventType;
 
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.*;
 
 public class Server {
-
-    private Queue<Request> queue;
-    private double mu;
-    private double p;  // Probabilité de routage vers le coordinateur
+    private final List<Event> queue;
+    public final double mu;
+    public final double p;  // Probabilité de routage vers le coordinateur
 
     public Server(double mu, double p) {
-        this.queue = new LinkedList<>();
+        this.queue = new ArrayList<>();
         this.mu = mu;
         this.p = p;
     }
 
-    public void requestProcess(double simulationTime) {
-        if (!queue.isEmpty()) {
-            Request request = queue.poll();
-            double endTimeService = simulationTime + mu;
-            request.setEndTimeService(endTimeService);
-            // Utilisez la probabilité de routage pour rediriger la requête
-            if (Utils.generator.nextDouble() <= this.p) {
-                // La requête va vers le coordinateur
-                Request rq = new Request(RequestType.END_PROCESSING, endTimeService);
-                queue.add(rq);
-                System.out.println("La requête " + request.getId() + " retourne dans le coordinateur à l'instant " + simulationTime);
-            } else {
-                // La requete sort du système
-                //todo
-                System.out.println("La requête " + request.getId() + " a quitté le système à l'instant " + simulationTime);
-            }
+    /**
+     *
+     * @param t le temps actuel dans la simulation
+     */
+    public void handleNextEvent(double t, Coordinator c) {
+        Event e = this.popNextEvent();
+
+        if(e.type != EventType.ARRIVAL) {
+            throw new UnsupportedOperationException(e.type + " pas implanté");
+        }
+
+        double departure = t + Utils.expo(this.mu);
+        if(Utils.generator.nextDouble() <= this.p) {
+            Event f = new Event(e.id, EventType.ARRIVAL, departure);
+            c.addRequest(f);
+            System.out.println("La requête " + e.id + " retourne dans le coordinateur à l'instant " + departure);
+        }
+        else {
+            Event f = new Event(e.id, EventType.DEPARTURE, departure);
+            this.addRequest(f);
+            System.out.println("La requête " + e.id + " a quitté le système à l'instant " + departure);
         }
     }
 
-    public void addRequest(Request request) {
-        this.queue.add(request);
+
+    /*
+        Ici la queue est commune au serveur et au coordinateur,
+        donc faut mettre ça dans une classe à part
+     */
+
+    public void addRequest(Event event) {
+        int i = Collections.binarySearch(this.queue, event);
+
+        this.queue.add(-i - 1, event);
     }
 
     public boolean isEmpty() {
         return this.queue.isEmpty();
     }
 
-    public double getNextEventTime() {
-        return isEmpty() ? Double.MAX_VALUE : queue.peek().getTime();
+    public Event popNextEvent() {
+        return isEmpty() ? null : queue.remove(0);
     }
-    public Queue<Request> getQueue() {
-        return queue;
+
+    public List<Event> getEventsForRequest(int req) {
+        List<Event> l = new ArrayList<>();
+        for(Event e : this.queue) {
+            if(e.id == req) {
+                l.add(e);
+            }
+        }
+
+        return l;
+    }
+
+    public List<Event> getQueue() {
+        return Collections.unmodifiableList(queue);
     }
 }

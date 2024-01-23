@@ -1,6 +1,6 @@
 package core;
 
-import model.Request;
+import model.Event;
 
 import java.util.LinkedList;
 import java.util.Random;
@@ -33,7 +33,7 @@ public class Utils {
     }
 
 
-    public static void writeDataFileTTrait(String filename, LinkedList<Request> data) {
+    public static void writeDataFileTTrait(String filename, LinkedList<Event> data) {
 
     }
 }
