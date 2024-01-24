@@ -1,19 +1,17 @@
 package system;
 
+import core.QueueBase;
 import core.Utils;
 import model.Event;
 import model.EventType;
 
 import java.util.*;
 
-public class Server {
-    private final List<Event> queue;
-    public final double mu;
+public class Server extends QueueBase {
     public final double p;  // Probabilité de routage vers le coordinateur
 
     public Server(double mu, double p) {
-        this.queue = new ArrayList<>();
-        this.mu = mu;
+        super(mu);
         this.p = p;
     }
 
@@ -39,40 +37,5 @@ public class Server {
             this.addRequest(f);
             System.out.println("La requête " + e.id + " a quitté le système à l'instant " + departure);
         }
-    }
-
-
-    /*
-        Ici la queue est commune au serveur et au coordinateur,
-        donc faut mettre ça dans une classe à part
-     */
-
-    public void addRequest(Event event) {
-        int i = Collections.binarySearch(this.queue, event);
-
-        this.queue.add(-i - 1, event);
-    }
-
-    public boolean isEmpty() {
-        return this.queue.isEmpty();
-    }
-
-    public Event popNextEvent() {
-        return isEmpty() ? null : queue.remove(0);
-    }
-
-    public List<Event> getEventsForRequest(int req) {
-        List<Event> l = new ArrayList<>();
-        for(Event e : this.queue) {
-            if(e.id == req) {
-                l.add(e);
-            }
-        }
-
-        return l;
-    }
-
-    public List<Event> getQueue() {
-        return Collections.unmodifiableList(queue);
     }
 }

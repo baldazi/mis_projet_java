@@ -35,12 +35,12 @@ public class DDB {
 
     public void requestProcess(double t) {
         // Implémente le traitement de la requête par le coordinateur
-        double endTime = t + Utils.expo(this.coordinator.getMu());
+        double endTime = t + Utils.expo(this.coordinator.mu);
         // Utilisez le vecteur de routage pour rediriger la requête
         int serveurDestination = coordinator.chooseServer();
         Event event = new Event(EventType.PROCESSING, endTime);
         servers.get(serveurDestination).addRequest(event);
-        System.out.println("Traitement de la requête " + event.getId() +
+        System.out.println("Traitement de la requête " + event.id +
 
                 " au coordinateur. Redirigée vers le serveur " + serveurDestination +
                 " à l'instant = " + endTime);

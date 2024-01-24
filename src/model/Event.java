@@ -1,7 +1,8 @@
 package model;
 
+import core.Utils;
+
 public class Event implements Comparable<Event> {
-    private static int counter = 0;
     public final int id; // Identifiant de la requête
     public final EventType type;
     public final double time;
@@ -13,7 +14,7 @@ public class Event implements Comparable<Event> {
     }
 
     public Event(EventType type, double time) {
-        this(counter++, type, time);
+        this(Utils.eventCounter++, type, time);
     }
 
     @Override
