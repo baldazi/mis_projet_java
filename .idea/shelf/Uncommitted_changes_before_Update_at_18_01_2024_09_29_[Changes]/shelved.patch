@@ -1,0 +1,218 @@
+Index: src/system/Coordinator.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package system;\r\n\r\nimport core.Utils;\r\nimport model.Request;\r\n\r\nimport java.util.LinkedList;\r\nimport java.util.List;\r\nimport java.util.Queue;\r\n\r\npublic class Coordinator {\r\n    private final Queue<Request> queue;\r\n    private final double mu;\r\n    private final int nb;\r\n\r\n    public Coordinator(double mu, int nb) {\r\n        this.queue = new LinkedList<>();\r\n        this.mu = mu;\r\n        this.nb = nb;\r\n    }\r\n\r\n    public void addRequest(Request request) {\r\n        this.queue.add(request);\r\n    }\r\n\r\n    public double getNextEventTime(List<Server> servers) {\r\n        double nextArrivalTime = Double.MAX_VALUE;\r\n        if (!queue.isEmpty()) {\r\n            nextArrivalTime = queue.poll().getTime();\r\n        }\r\n\r\n        double nextProcessingTime = Double.MAX_VALUE;\r\n        for (Server server : servers) {\r\n            if (!server.isEmpty()) {\r\n                double processingTime = server.getNextEventTime();\r\n                nextProcessingTime = Math.min(nextProcessingTime, processingTime);\r\n            }\r\n        }\r\n\r\n        return Math.min(nextArrivalTime, nextProcessingTime);\r\n    }\r\n\r\n    public double getMu() {\r\n        return mu;\r\n    }\r\n\r\n    public int chooseServer() {\r\n        // Choix aléatoire d'un serveur parmi les nb serveurs disponibles\r\n        return Utils.generator.nextInt(nb);\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/system/Coordinator.java b/src/system/Coordinator.java
+--- a/src/system/Coordinator.java	(revision 28c7224a79f1d1c348d42a8632650b3a68b3bfb5)
++++ b/src/system/Coordinator.java	(date 1705563047576)
+@@ -8,7 +8,8 @@
+ import java.util.Queue;
+ 
+ public class Coordinator {
+-    private final Queue<Request> queue;
++    private final Queue<Request> queue; //une file d'attente qui stocke les demandes à traiter par le serveur
++    // (obj de type request).
+     private final double mu;
+     private final int nb;
+ 
+@@ -22,7 +23,8 @@
+         this.queue.add(request);
+     }
+ 
+-    public double getNextEventTime(List<Server> servers) {
++    public double getNextEventTime(List<Server> servers) {//calcule du prochain temps d'événement, qui est le min
++        // entre le prochain temps d'arrivée et le prochain temps de traitement parmi les serveurs.
+         double nextArrivalTime = Double.MAX_VALUE;
+         if (!queue.isEmpty()) {
+             nextArrivalTime = queue.poll().getTime();
+Index: src/Main.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import system.DDB;\r\n\r\npublic class Main {\r\n\r\n    private static final double P = 1000;\r\n    public static void main(String[] args) {\r\n        // Paramètres de simulation\r\n        int nbServers = 3;\r\n        double lambda = 0.0095;\r\n        double mu = 0.01;\r\n        double[] mus = {0.1, 0.1, 0.2};\r\n        double[] ps = {1.0 / 3, 1.0 / 3, 1.0 / 3};\r\n\r\n        // Création du système de gestion de requêtes\r\n        DDB system = new DDB(nbServers, lambda, mu, mus, ps);\r\n\r\n        // Exécution de la simulation\r\n        system.simulate(P);\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Main.java b/src/Main.java
+--- a/src/Main.java	(revision 28c7224a79f1d1c348d42a8632650b3a68b3bfb5)
++++ b/src/Main.java	(date 1705565954106)
+@@ -2,7 +2,7 @@
+ 
+ public class Main {
+ 
+-    private static final double P = 1000;
++    private static final double P = 1000;//temp limite de simulation
+     public static void main(String[] args) {
+         // Paramètres de simulation
+         int nbServers = 3;
+Index: src/system/Server.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package system;\r\n\r\nimport core.Utils;\r\nimport model.Request;\r\nimport model.RequestType;\r\n\r\nimport java.util.LinkedList;\r\nimport java.util.Queue;\r\n\r\npublic class Server {\r\n\r\n    private Queue<Request> queue;\r\n    private double mu;\r\n    private double p;  // Probabilité de routage vers le coordinateur\r\n\r\n    public Server(double mu, double p) {\r\n        this.queue = new LinkedList<>();\r\n        this.mu = mu;\r\n        this.p = p;\r\n    }\r\n\r\n    public void requestProcess(double simulationTime) {\r\n        if (!queue.isEmpty()) {\r\n            Request request = queue.poll();\r\n            double endTimeService = simulationTime + mu;\r\n            request.setEndTimeService(endTimeService);\r\n            // Utilisez la probabilité de routage pour rediriger la requête\r\n            if (Utils.generator.nextDouble() <= this.p) {\r\n                // La requête va vers le coordinateur\r\n                queue.add(new Request(RequestType.END_PROCESSING, endTimeService));\r\n            } else {\r\n                // La requete sort du système\r\n                //todo\r\n                System.out.println(\"La requête \" + request.getId() + \" a quitté le système à la simulationTime = \" + simulationTime);\r\n            }\r\n        }\r\n    }\r\n\r\n    public void addRequest(Request request) {\r\n        this.queue.add(request);\r\n    }\r\n\r\n    public boolean isEmpty() {\r\n        return this.queue.isEmpty();\r\n    }\r\n\r\n    public double getNextEventTime() {\r\n        return isEmpty() ? Double.MAX_VALUE : queue.peek().getTime();\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/system/Server.java b/src/system/Server.java
+--- a/src/system/Server.java	(revision 28c7224a79f1d1c348d42a8632650b3a68b3bfb5)
++++ b/src/system/Server.java	(date 1705564251093)
+@@ -7,7 +7,7 @@
+ import java.util.LinkedList;
+ import java.util.Queue;
+ 
+-public class Server {
++public class Server {//modélise le comportement d'un serveur dans un système de file d'attente,
+ 
+     private Queue<Request> queue;
+     private double mu;
+@@ -19,15 +19,16 @@
+         this.p = p;
+     }
+ 
+-    public void requestProcess(double simulationTime) {
++    public void requestProcess(double simulationTime) {//simule le traitement d'une demande par le serveur
+         if (!queue.isEmpty()) {
+             Request request = queue.poll();
+-            double endTimeService = simulationTime + mu;
++            double endTimeService = simulationTime + mu;// fin du temps de service de la demande
+             request.setEndTimeService(endTimeService);
+             // Utilisez la probabilité de routage pour rediriger la requête
+             if (Utils.generator.nextDouble() <= this.p) {
+-                // La requête va vers le coordinateur
++                // si La requête va vers le coordinateur
+                 queue.add(new Request(RequestType.END_PROCESSING, endTimeService));
++                //une nvl dde est ajouté a la file
+             } else {
+                 // La requete sort du système
+                 //todo
+@@ -47,4 +48,5 @@
+     public double getNextEventTime() {
+         return isEmpty() ? Double.MAX_VALUE : queue.peek().getTime();
+     }
++    //retourne le temps du prochain événement dans le serveu
+ }
+Index: src/system/DDB.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package system;\r\n\r\nimport core.Utils;\r\nimport model.Request;\r\nimport model.RequestType;\r\n\r\nimport java.util.ArrayList;\r\nimport java.util.List;\r\n\r\npublic class DDB {\r\n\r\n    private final Coordinator coordinator;\r\n    private final List<Server> servers;\r\n    private final double lambda;\r\n    private double simulationTime;\r\n\r\n    public DDB(int nb, double lambda, double mu, double[] mus, double[] ps) {\r\n        this.lambda = lambda;\r\n        this.simulationTime = 0;\r\n        this.servers = new ArrayList<>(nb);\r\n\r\n        for (int i = 0; i < nb; i++) {\r\n            servers.add(new Server(mus[i], ps[i]));\r\n        }\r\n\r\n        this.coordinator = new Coordinator(mu, nb);\r\n    }\r\n\r\n    private void generateArrivalRequest() {\r\n        double arrivalTime = Utils.expo(this.lambda);\r\n        Request request = new Request(RequestType.ARRIVAL, arrivalTime);\r\n        coordinator.addRequest(request);\r\n        System.out.println(\"Arrivée d'une requête au coordinateur à la simulationTime = \" + arrivalTime);\r\n    }\r\n\r\n    public void requestProcess(double t) {\r\n        // Implémentez le traitement de la requête par le coordinateur\r\n        double endTime = t + this.coordinator.getMu();\r\n        // Utilisez le vecteur de routage pour rediriger la requête\r\n        int serveurDestination = coordinator.chooseServer();\r\n        Request request = new Request(RequestType.PROCESSING, endTime);\r\n        servers.get(serveurDestination).addRequest(request);\r\n        System.out.println(\"Traitement de la requête \" + request.getId() +\r\n                \" au coordinateur. Redirigée vers le serveur \" + serveurDestination +\r\n                \" à la simulationTime = \" + simulationTime);\r\n    }\r\n\r\n    public void simulate(double T) {\r\n        generateArrivalRequest();\r\n\r\n        while (this.simulationTime < T) {\r\n            // Trouver le prochain événement\r\n            double nextEventTime = Double.MAX_VALUE;\r\n            for (Server server : servers) {\r\n                if (!server.isEmpty() && server.getNextEventTime() < nextEventTime) {\r\n                    nextEventTime = server.getNextEventTime();\r\n                }\r\n            }\r\n\r\n            // Événement dans le coordinateur\r\n            double coordEventTime = coordinator.getNextEventTime(servers);\r\n            if (coordEventTime < nextEventTime) {\r\n                this.requestProcess(coordEventTime);\r\n            } else {\r\n                // Événement dans un serveur\r\n                for (Server server : servers) {\r\n                    if (!server.isEmpty() && server.getNextEventTime() == nextEventTime) {\r\n                        server.requestProcess(nextEventTime);\r\n                    }else {\r\n                        generateArrivalRequest();\r\n                    }\r\n                }\r\n            }\r\n\r\n            this.simulationTime = Math.min(coordEventTime, nextEventTime);\r\n        }\r\n    }\r\n}\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/system/DDB.java b/src/system/DDB.java
+--- a/src/system/DDB.java	(revision 28c7224a79f1d1c348d42a8632650b3a68b3bfb5)
++++ b/src/system/DDB.java	(date 1705565703598)
+@@ -8,7 +8,7 @@
+ import java.util.List;
+ 
+ public class DDB {
+-
++   // simule un système distribué de base avec un coordinateur (Coordinator) et plusieurs serveurs (Server).
+     private final Coordinator coordinator;
+     private final List<Server> servers;
+     private final double lambda;
+@@ -27,16 +27,17 @@
+     }
+ 
+     private void generateArrivalRequest() {
++        //génère une nouvelle requête d'arrivée avec un temps d'arrivée calculé à partir d'une distribution expo
+         double arrivalTime = Utils.expo(this.lambda);
+         Request request = new Request(RequestType.ARRIVAL, arrivalTime);
+         coordinator.addRequest(request);
+         System.out.println("Arrivée d'une requête au coordinateur à la simulationTime = " + arrivalTime);
+     }
+ 
+-    public void requestProcess(double t) {
++    public void requestProcess(double t) { //
+         // Implémentez le traitement de la requête par le coordinateur
+         double endTime = t + this.coordinator.getMu();
+-        // Utilisez le vecteur de routage pour rediriger la requête
++        // Utilisez le vecteur de routage pour rediriger la requête vers l'un des serveurs
+         int serveurDestination = coordinator.chooseServer();
+         Request request = new Request(RequestType.PROCESSING, endTime);
+         servers.get(serveurDestination).addRequest(request);
+@@ -45,11 +46,11 @@
+                 " à la simulationTime = " + simulationTime);
+     }
+ 
+-    public void simulate(double T) {
++    public void simulate(double T) {//simule le fonctionnement du système jusqu'à un temps maximal T
+         generateArrivalRequest();
+ 
+         while (this.simulationTime < T) {
+-            // Trouver le prochain événement
++            // Trouver le prochain événement soit traitement d'une requête par un serveur ou par coordinateur
+             double nextEventTime = Double.MAX_VALUE;
+             for (Server server : servers) {
+                 if (!server.isEmpty() && server.getNextEventTime() < nextEventTime) {
+@@ -72,7 +73,7 @@
+                 }
+             }
+ 
+-            this.simulationTime = Math.min(coordEventTime, nextEventTime);
++            this.simulationTime = Math.min(coordEventTime, nextEventTime);//mettre à jour le temps de simulation
+         }
+     }
+ }
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"2823b7ae-6a41-4133-b501-b1db7d70b223\" name=\"Changes\" comment=\"update\">\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/system/Coordinator.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/system/Coordinator.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/system/DDB.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/system/DDB.java\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"CodeStyleSettingsInfer\">\r\n    <option name=\"done\" value=\"true\" />\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"Class\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"MarkdownSettingsMigration\">\r\n    <option name=\"stateVersion\" value=\"1\" />\r\n  </component>\r\n  <component name=\"ProjectCodeStyleSettingsMigration\">\r\n    <option name=\"version\" value=\"2\" />\r\n  </component>\r\n  <component name=\"ProjectId\" id=\"2azg3mdwgLv7xeEad4GcTJ8TZfi\" />\r\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\"><![CDATA[{\r\n  \"keyToString\": {\r\n    \"RunOnceActivity.OpenProjectViewOnStart\": \"true\",\r\n    \"RunOnceActivity.ShowReadmeOnStart\": \"true\",\r\n    \"git-widget-placeholder\": \"master\",\r\n    \"last_opened_file_path\": \"C:/Users/Aziz Balde/IdeaProjects/ProgetMis/src\",\r\n    \"settings.editor.selected.configurable\": \"preferences.pluginManager\"\r\n  }\r\n}]]></component>\r\n  <component name=\"RecentsManager\">\r\n    <key name=\"CopyFile.RECENT_KEYS\">\r\n      <recent name=\"C:\\Users\\Aziz Balde\\IdeaProjects\\ProgetMis\\src\" />\r\n    </key>\r\n    <key name=\"MoveFile.RECENT_KEYS\">\r\n      <recent name=\"C:\\Users\\Aziz Balde\\IdeaProjects\\ProgetMis\" />\r\n    </key>\r\n    <key name=\"MoveClassesOrPackagesDialog.RECENTS_KEY\">\r\n      <recent name=\"model\" />\r\n    </key>\r\n    <key name=\"CopyClassDialog.RECENTS_KEY\">\r\n      <recent name=\"\" />\r\n    </key>\r\n  </component>\r\n  <component name=\"RunManager\" selected=\"Application.Main\">\r\n    <configuration name=\"DDB\" type=\"Application\" factoryName=\"Application\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"system.DDB\" />\r\n      <module name=\"ProgetMis\" />\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"Main\" type=\"Application\" factoryName=\"Application\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"Main\" />\r\n      <module name=\"ProgetMis\" />\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <recent_temporary>\r\n      <list>\r\n        <item itemvalue=\"Application.Main\" />\r\n        <item itemvalue=\"Application.DDB\" />\r\n        <item itemvalue=\"Application.Main\" />\r\n      </list>\r\n    </recent_temporary>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"2823b7ae-6a41-4133-b501-b1db7d70b223\" name=\"Changes\" comment=\"\" />\r\n      <created>1705326630229</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1705326630229</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00001\" summary=\"initialisation du projet\">\r\n      <created>1705326730295</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1705326730295</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00002\" summary=\"definition des requetes\">\r\n      <created>1705497165519</created>\r\n      <option name=\"number\" value=\"00002\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1705497165519</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00003\" summary=\"definition des requetes\">\r\n      <created>1705504946636</created>\r\n      <option name=\"number\" value=\"00003\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00003\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1705504946636</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00004\" summary=\"redifinition\">\r\n      <created>1705510534003</created>\r\n      <option name=\"number\" value=\"00004\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00004\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1705510534003</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00005\" summary=\"update\">\r\n      <created>1705519668244</created>\r\n      <option name=\"number\" value=\"00005\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00005\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1705519668244</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00006\" summary=\"update\">\r\n      <created>1705532724906</created>\r\n      <option name=\"number\" value=\"00006\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00006\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1705532724906</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00007\" summary=\"update\">\r\n      <created>1705538930510</created>\r\n      <option name=\"number\" value=\"00007\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00007\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1705538930510</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"8\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"Vcs.Log.Tabs.Properties\">\r\n    <option name=\"TAB_STATES\">\r\n      <map>\r\n        <entry key=\"MAIN\">\r\n          <value>\r\n            <State />\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <MESSAGE value=\"initialisation du projet\" />\r\n    <MESSAGE value=\"definition des requetes\" />\r\n    <MESSAGE value=\"redifinition\" />\r\n    <MESSAGE value=\"update\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"update\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision 28c7224a79f1d1c348d42a8632650b3a68b3bfb5)
++++ b/.idea/workspace.xml	(date 1705565954468)
+@@ -6,8 +6,10 @@
+   <component name="ChangeListManager">
+     <list default="true" id="2823b7ae-6a41-4133-b501-b1db7d70b223" name="Changes" comment="update">
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/src/system/Coordinator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/system/Coordinator.java" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/src/system/DDB.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/system/DDB.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/system/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/system/Server.java" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -26,6 +28,7 @@
+   </component>
+   <component name="Git.Settings">
+     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
++    <option name="UPDATE_TYPE" value="REBASE" />
+   </component>
+   <component name="MarkdownSettingsMigration">
+     <option name="stateVersion" value="1" />
+@@ -33,21 +36,24 @@
+   <component name="ProjectCodeStyleSettingsMigration">
+     <option name="version" value="2" />
+   </component>
++  <component name="ProjectColorInfo"><![CDATA[{
++  "associatedIndex": 0
++}]]></component>
+   <component name="ProjectId" id="2azg3mdwgLv7xeEad4GcTJ8TZfi" />
+   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+   <component name="ProjectViewState">
+     <option name="hideEmptyMiddlePackages" value="true" />
+     <option name="showLibraryContents" value="true" />
+   </component>
+-  <component name="PropertiesComponent"><![CDATA[{
+-  "keyToString": {
+-    "RunOnceActivity.OpenProjectViewOnStart": "true",
+-    "RunOnceActivity.ShowReadmeOnStart": "true",
+-    "git-widget-placeholder": "master",
+-    "last_opened_file_path": "C:/Users/Aziz Balde/IdeaProjects/ProgetMis/src",
+-    "settings.editor.selected.configurable": "preferences.pluginManager"
++  <component name="PropertiesComponent">{
++  &quot;keyToString&quot;: {
++    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
++    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
++    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
++    &quot;last_opened_file_path&quot;: &quot;C:/Users/Aziz Balde/IdeaProjects/ProgetMis/src&quot;,
++    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
+   }
+-}]]></component>
++}</component>
+   <component name="RecentsManager">
+     <key name="CopyFile.RECENT_KEYS">
+       <recent name="C:\Users\Aziz Balde\IdeaProjects\ProgetMis\src" />

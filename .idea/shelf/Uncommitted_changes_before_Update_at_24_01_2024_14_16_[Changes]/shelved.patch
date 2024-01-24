@@ -1,0 +1,102 @@
+Index: src/system/Coordinator.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package system;\r\n\r\nimport core.Utils;\r\nimport model.Request;\r\n\r\nimport java.util.LinkedList;\r\nimport java.util.List;\r\nimport java.util.Queue;\r\n\r\npublic class Coordinator {\r\n    private final Queue<Request> queue;\r\n    private final double mu;\r\n    private final int nb;\r\n\r\n    public Coordinator(double mu, int nb) {\r\n        this.queue = new LinkedList<>();\r\n        this.mu = mu;\r\n        this.nb = nb;\r\n    }\r\n\r\n    public void addRequest(Request request) {\r\n        this.queue.add(request);\r\n    }\r\n\r\n    public double getNextEventTime(List<Server> servers) {\r\n        double nextArrivalTime = Double.MAX_VALUE;\r\n        if (!queue.isEmpty()) {\r\n            nextArrivalTime = queue.poll().getTime();\r\n        }\r\n\r\n        double nextProcessingTime = Double.MAX_VALUE;\r\n        for (Server server : servers) {\r\n            if (!server.isEmpty()) {\r\n                double processingTime = server.getNextEventTime();\r\n                nextProcessingTime = Math.min(nextProcessingTime, processingTime);\r\n            }\r\n        }\r\n\r\n        return Math.min(nextArrivalTime, nextProcessingTime);\r\n    }\r\n\r\n    public double getMu() {\r\n        return mu;\r\n    }\r\n\r\n    public int chooseServer() {\r\n        // Choix aléatoire d'un serveur parmi les nb serveurs disponibles\r\n        return Utils.generator.nextInt(nb);\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/system/Coordinator.java b/src/system/Coordinator.java
+--- a/src/system/Coordinator.java	(revision 12090fbff7115be3fdb44312f37876c920024099)
++++ b/src/system/Coordinator.java	(date 1705566566315)
+@@ -8,7 +8,8 @@
+ import java.util.Queue;
+ 
+ public class Coordinator {
+-    private final Queue<Request> queue;
++    private final Queue<Request> queue; //une file d'attente qui stocke les demandes à traiter par le serveur
++    // (obj de type request).
+     private final double mu;
+     private final int nb;
+ 
+@@ -22,7 +23,8 @@
+         this.queue.add(request);
+     }
+ 
+-    public double getNextEventTime(List<Server> servers) {
++    public double getNextEventTime(List<Server> servers) {//calcule du prochain temps d'événement, qui est le min
++        // entre le prochain temps d'arrivée et le prochain temps de traitement parmi les serveurs.
+         double nextArrivalTime = Double.MAX_VALUE;
+         if (!queue.isEmpty()) {
+             nextArrivalTime = queue.poll().getTime();
+Index: src/Main.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import system.DDB;\r\n\r\npublic class Main {\r\n\r\n    private static final double P = 1000;\r\n    public static void main(String[] args) {\r\n        // Paramètres de simulation\r\n        int nbServers = 3;\r\n        double lambda = 0.0095;\r\n        double mu = 0.01;\r\n        double[] mus = {0.1, 0.1, 0.2};\r\n        double[] ps = {1.0 / 3, 1.0 / 3, 1.0 / 3};\r\n\r\n        // Création du système de gestion de requêtes\r\n        DDB system = new DDB(nbServers, lambda, mu, mus, ps);\r\n\r\n        // Exécution de la simulation\r\n        system.simulate(P);\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Main.java b/src/Main.java
+--- a/src/Main.java	(revision 12090fbff7115be3fdb44312f37876c920024099)
++++ b/src/Main.java	(date 1705573886127)
+@@ -2,7 +2,7 @@
+ 
+ public class Main {
+ 
+-    private static final double P = 1000;
++    private static final double P = 1000;//temp limite de simulation
+     public static void main(String[] args) {
+         // Paramètres de simulation
+         int nbServers = 3;
+@@ -16,5 +16,6 @@
+ 
+         // Exécution de la simulation
+         system.simulate(P);
++
+     }
+ }
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"2823b7ae-6a41-4133-b501-b1db7d70b223\" name=\"Changes\" comment=\"update\">\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/model/Request.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/model/Request.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/system/DDB.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/system/DDB.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/system/Server.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/system/Server.java\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"CodeStyleSettingsInfer\">\r\n    <option name=\"done\" value=\"true\" />\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"Class\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"MarkdownSettingsMigration\">\r\n    <option name=\"stateVersion\" value=\"1\" />\r\n  </component>\r\n  <component name=\"ProjectCodeStyleSettingsMigration\">\r\n    <option name=\"version\" value=\"2\" />\r\n  </component>\r\n  <component name=\"ProjectId\" id=\"2azg3mdwgLv7xeEad4GcTJ8TZfi\" />\r\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\" />\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\"><![CDATA[{\r\n  \"keyToString\": {\r\n    \"RunOnceActivity.OpenProjectViewOnStart\": \"true\",\r\n    \"RunOnceActivity.ShowReadmeOnStart\": \"true\",\r\n    \"git-widget-placeholder\": \"master\",\r\n    \"last_opened_file_path\": \"C:/Users/Aziz Balde/IdeaProjects/ProgetMis/src\",\r\n    \"settings.editor.selected.configurable\": \"preferences.pluginManager\"\r\n  }\r\n}]]></component>\r\n  <component name=\"RecentsManager\">\r\n    <key name=\"CopyFile.RECENT_KEYS\">\r\n      <recent name=\"C:\\Users\\Aziz Balde\\IdeaProjects\\ProgetMis\\src\" />\r\n    </key>\r\n    <key name=\"MoveFile.RECENT_KEYS\">\r\n      <recent name=\"C:\\Users\\Aziz Balde\\IdeaProjects\\ProgetMis\" />\r\n    </key>\r\n    <key name=\"MoveClassesOrPackagesDialog.RECENTS_KEY\">\r\n      <recent name=\"model\" />\r\n    </key>\r\n    <key name=\"CopyClassDialog.RECENTS_KEY\">\r\n      <recent name=\"\" />\r\n    </key>\r\n  </component>\r\n  <component name=\"RunManager\" selected=\"Application.Main\">\r\n    <configuration name=\"DDB\" type=\"Application\" factoryName=\"Application\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"system.DDB\" />\r\n      <module name=\"ProgetMis\" />\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <configuration name=\"Main\" type=\"Application\" factoryName=\"Application\" temporary=\"true\" nameIsGenerated=\"true\">\r\n      <option name=\"MAIN_CLASS_NAME\" value=\"Main\" />\r\n      <module name=\"ProgetMis\" />\r\n      <method v=\"2\">\r\n        <option name=\"Make\" enabled=\"true\" />\r\n      </method>\r\n    </configuration>\r\n    <recent_temporary>\r\n      <list>\r\n        <item itemvalue=\"Application.Main\" />\r\n        <item itemvalue=\"Application.DDB\" />\r\n        <item itemvalue=\"Application.Main\" />\r\n      </list>\r\n    </recent_temporary>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"2823b7ae-6a41-4133-b501-b1db7d70b223\" name=\"Changes\" comment=\"\" />\r\n      <created>1705326630229</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1705326630229</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00001\" summary=\"initialisation du projet\">\r\n      <created>1705326730295</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1705326730295</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00002\" summary=\"definition des requetes\">\r\n      <created>1705497165519</created>\r\n      <option name=\"number\" value=\"00002\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1705497165519</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00003\" summary=\"definition des requetes\">\r\n      <created>1705504946636</created>\r\n      <option name=\"number\" value=\"00003\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00003\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1705504946636</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00004\" summary=\"redifinition\">\r\n      <created>1705510534003</created>\r\n      <option name=\"number\" value=\"00004\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00004\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1705510534003</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00005\" summary=\"update\">\r\n      <created>1705519668244</created>\r\n      <option name=\"number\" value=\"00005\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00005\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1705519668244</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00006\" summary=\"update\">\r\n      <created>1705532724906</created>\r\n      <option name=\"number\" value=\"00006\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00006\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1705532724906</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00007\" summary=\"update\">\r\n      <created>1705538930510</created>\r\n      <option name=\"number\" value=\"00007\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00007\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1705538930510</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00008\" summary=\"update\">\r\n      <created>1705540618613</created>\r\n      <option name=\"number\" value=\"00008\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00008\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1705540618613</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"9\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"Vcs.Log.Tabs.Properties\">\r\n    <option name=\"TAB_STATES\">\r\n      <map>\r\n        <entry key=\"MAIN\">\r\n          <value>\r\n            <State />\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <MESSAGE value=\"initialisation du projet\" />\r\n    <MESSAGE value=\"definition des requetes\" />\r\n    <MESSAGE value=\"redifinition\" />\r\n    <MESSAGE value=\"update\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"update\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision 12090fbff7115be3fdb44312f37876c920024099)
++++ b/.idea/workspace.xml	(date 1705567170416)
+@@ -6,9 +6,8 @@
+   <component name="ChangeListManager">
+     <list default="true" id="2823b7ae-6a41-4133-b501-b1db7d70b223" name="Changes" comment="update">
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/model/Request.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Request.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/system/DDB.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/system/DDB.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/system/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/system/Server.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/system/Coordinator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/system/Coordinator.java" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -40,15 +39,15 @@
+     <option name="hideEmptyMiddlePackages" value="true" />
+     <option name="showLibraryContents" value="true" />
+   </component>
+-  <component name="PropertiesComponent"><![CDATA[{
+-  "keyToString": {
+-    "RunOnceActivity.OpenProjectViewOnStart": "true",
+-    "RunOnceActivity.ShowReadmeOnStart": "true",
+-    "git-widget-placeholder": "master",
+-    "last_opened_file_path": "C:/Users/Aziz Balde/IdeaProjects/ProgetMis/src",
+-    "settings.editor.selected.configurable": "preferences.pluginManager"
++  <component name="PropertiesComponent">{
++  &quot;keyToString&quot;: {
++    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
++    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
++    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
++    &quot;last_opened_file_path&quot;: &quot;C:/Users/Aziz Balde/IdeaProjects/ProgetMis/src&quot;,
++    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
+   }
+-}]]></component>
++}</component>
+   <component name="RecentsManager">
+     <key name="CopyFile.RECENT_KEYS">
+       <recent name="C:\Users\Aziz Balde\IdeaProjects\ProgetMis\src" />
