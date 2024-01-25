@@ -7,11 +7,6 @@ public enum EventType {
     ARRIVAL,
 
     /**
-     * Le client est traité par le serveur/le coordinateur.
-     */
-    PROCESSING,
-
-    /**
      * Le client a été traité et sort de la file d'attente.
      */
     DEPARTURE

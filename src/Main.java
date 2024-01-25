@@ -2,7 +2,7 @@ import system.DDB;
 import java.util.Scanner;
 public class Main {
 
-    private static final double P = 1000;
+    private static final double P = 100;
     public static void main(String[] args) {
         //
         DDB system;
@@ -24,9 +24,6 @@ public class Main {
 
             // Création du système de gestion de requêtes
             system = new DDB(nbServers, lambda, mu, mus, ps);
-
-            // Exécution de la simulation
-            system.simulate(P);
         }else if(choix == 2) {
             // Paramètres de simulation
             nbServers = 3;
@@ -36,9 +33,6 @@ public class Main {
 
             // Création du système de gestion de requêtes
             system = new DDB(nbServers, lambda, mu, mus, ps);
-
-            // Exécution de la simulation
-            system.simulate(P);
         }else{
             System.out.println("nombre de serveurs : ");
             nbServers = scan.nextInt();
@@ -59,10 +53,10 @@ public class Main {
             }
             // Création du système de gestion de requêtes
             system = new DDB(nbServers, lambda, mu, mus, ps);
-
-            // Exécution de la simulation
-            system.simulate(P);
         }
+
+        // Exécution de la simulation
+        system.simulate(P);
 
         scan.close();
     }

@@ -1,10 +1,13 @@
 package core;
 
 import model.Event;
+import model.EventType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class QueueBase {
     private final List<Event> queue;
@@ -22,8 +25,18 @@ public class QueueBase {
 
     public void addRequest(Event event) {
         int i = Collections.binarySearch(this.queue, event);
+        if(i >= 0) {
+            throw new IllegalArgumentException("Evènement dupliqué: " + event + " " + this.queue.get(i));
+        }
 
         this.queue.add(-i - 1, event);
+    }
+
+    public void removeEvent(Event e) {
+        int i = Collections.binarySearch(this.queue, e);
+        if(i >= 0) {
+            this.queue.remove(i);
+        }
     }
 
     public boolean isEmpty() {
@@ -32,6 +45,10 @@ public class QueueBase {
 
     public Event popNextEvent() {
         return isEmpty() ? null : queue.remove(0);
+    }
+
+    public Event peekNextEvent() {
+        return isEmpty() ? null : queue.get(0);
     }
 
     public List<Event> getEventsForRequest(int req) {
@@ -43,6 +60,31 @@ public class QueueBase {
         }
 
         return l;
+    }
+
+    /**
+     * Renvoie tous les évènements `e` tels que `e.id == i <=> e appartient à tab[i]`.
+     * En d'autres mots, `tab[i]` contient tous les évènements de la requête n° `i`.
+     *
+     * @param requestNumber
+     * @return
+     */
+    public Event[][] getEventsForEachRequest(int requestNumber) {
+        List<Event>[] events = new ArrayList[requestNumber];
+        for(int i = 0; i < events.length; ++i) {
+            events[i] = new ArrayList<>(3);
+        }
+
+        for(Event e : this.queue) {
+            events[e.id].add(e);
+            // ~~~~~~~~~ l
+        }
+
+        return Arrays.stream(events).map(e -> e.toArray(Event[]::new)).toArray(Event[][]::new);
+    }
+
+    public Stream<Event> getEventsForType(EventType type) {
+        return this.queue.stream().filter(e -> e.type == type);
     }
 
     public List<Event> getQueue() {

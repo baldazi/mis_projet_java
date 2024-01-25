@@ -7,7 +7,7 @@ import java.util.Random;
 
 public class Utils {
 
-    public static int eventCounter = 0;
+    public static int requestCounter = 0;
 
     public static final Random generator = new Random();
 
