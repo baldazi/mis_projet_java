@@ -56,7 +56,7 @@ public class DDB {
             this.coordinator.addRequest(new Event(Utils.requestCounter++, EventType.ARRIVAL, t, -1));
         }
 
-        System.out.println("Nombre de requêtes: " + this.nbRequêtes());
+        System.out.println("Nombre de requêtes: " + this.nbRequest());
 
         QueueBase finalQueue = new QueueBase(Double.NaN);
 
@@ -69,14 +69,13 @@ public class DDB {
                 case ARRIVAL:
                     if(e.target == -1) {
                         // FIXME: le temps de fin doit prendre en compte la taille de la file
-
                         // Implémente le traitement de la requête par le coordinateur
                         double endTime = this.simulationTime + Utils.expo(this.coordinator.mu);
                         // Utilisez le vecteur de routage pour rediriger la requête
                         int serveurDestination = coordinator.chooseServer();
                         Event event = new Event(e.id, EventType.ARRIVAL, endTime, serveurDestination);
                         servers.get(serveurDestination).addRequest(event);
-                        /* System.out.println("Traitement de la requête " + event.id +
+                        /*System.out.println("Traitement de la requête " + event.id +
 
                             " au coordinateur. Redirigée vers le serveur " + serveurDestination +
                             " à l'instant = " + endTime);*/
@@ -93,8 +92,11 @@ public class DDB {
                     throw new UnsupportedOperationException(e.type + " pas implanté");
             }
         }
-
-        System.out.println(Arrays.deepToString(finalQueue.getEventsForEachRequest(this.nbRequêtes() + 1)));
+        //TODO
+        int nbRequest = finalQueue.getQueue().size();
+        double[] eachRequestTime = finalQueue.eachRequestTime(nbRequest);
+        Utils.saveData(eachRequestTime,  "data/data.dat");
+        //System.out.println(Arrays.deepToString(finalQueue.getEventsForEachRequest(this.nbRequest() + 1)));
     }
 
     public int nbEvents(){
@@ -104,7 +106,7 @@ public class DDB {
         return nb;
     }
 
-    public int nbRequêtes() {
+    public int nbRequest() {
         return Utils.requestCounter - 1;
     }
 }

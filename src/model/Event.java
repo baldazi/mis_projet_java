@@ -4,8 +4,17 @@ import java.util.Comparator;
 import java.util.Objects;
 
 public class Event implements Comparable<Event> {
-    public final int id; // Identifiant de la requête
+    /**
+     * Identifiant de la requête.
+     */
+    public final int id;
+    /**
+     * Représente le type de l'evenement associé à la requête.
+     */
     public final EventType type;
+    /**
+     * Temps associé à l'événement.
+     */
     public final double time;
     /**
      * Représente le n° du serveur ; {@code -1} pour le coordinateur.

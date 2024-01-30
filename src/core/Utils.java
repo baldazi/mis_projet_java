@@ -2,8 +2,12 @@ package core;
 
 import model.Event;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.LinkedList;
+import java.util.Locale;
 import java.util.Random;
+import java.util.function.Function;
 
 public class Utils {
 
@@ -32,6 +36,19 @@ public class Utils {
             x = generator.nextDouble();
         }
         return (-Math.log(1 - x) / lambda);
+    }
+
+    public static void saveData(double[] data, String filename) {
+        try {
+            FileWriter writer = new FileWriter(filename);
+            for (int i = 0; i < data.length; i++) {
+                if (data[i] != 0) {
+                    writer.write(String.format(Locale.US, "%6d%20.8f%n", i, data[i]));
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 

@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class QueueBase {
+    /**
+     * Structure permettant de stoker les événements.
+     */
     private final List<Event> queue;
     public final double mu;
 
@@ -18,9 +21,9 @@ public class QueueBase {
         this.mu = mu;
     }
 
-     /*
-        Ici la queue est commune au serveur et au coordinateur,
-        donc faut mettre ça dans une classe à part
+     /**
+        *Ici la queue est commune au serveur et au coordinateur,
+        *donc Nous mettons ça dans une classe à part
      */
 
     public void addRequest(Event event) {
@@ -81,6 +84,17 @@ public class QueueBase {
         }
 
         return Arrays.stream(events).map(e -> e.toArray(Event[]::new)).toArray(Event[][]::new);
+    }
+
+    public double[] eachRequestTime(int requestNumber){
+        Event[][] events = this.getEventsForEachRequest(requestNumber);
+        double[] result = new double[requestNumber];
+        for (int i=0; i<requestNumber; i++){
+            for (Event event : events[i]) {
+                result[i] += event.time;
+            }
+        }
+        return result;
     }
 
     public Stream<Event> getEventsForType(EventType type) {

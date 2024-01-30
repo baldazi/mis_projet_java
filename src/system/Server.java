@@ -5,8 +5,6 @@ import core.Utils;
 import model.Event;
 import model.EventType;
 
-import java.util.*;
-
 public class Server extends QueueBase {
     /**
      * Probabilité de routage vers le coordinateur.

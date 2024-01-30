@@ -2,7 +2,7 @@ import system.DDB;
 import java.util.Scanner;
 public class Main {
 
-    private static final double P = 100;
+    private static final double P = 1;
     public static void main(String[] args) {
         //
         DDB system;
